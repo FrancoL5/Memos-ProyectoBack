@@ -1,7 +1,7 @@
 import express from "express"
 import morgan from "morgan"
-import { router } from "./routes/memos.routes";
-import {authenticate} from "./utils/sequelize"
+import { router } from "./routes/memos.routes.js";
+import {authenticate} from "./utils/sequelize.js"
 const app = express()
 
 

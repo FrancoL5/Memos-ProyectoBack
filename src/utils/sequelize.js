@@ -1,11 +1,10 @@
-import {Sequelize} from "sequelize-typescript"
-const dotenv = require("dotenv");
-
+import {Sequelize} from "sequelize"
+import dotenv from "dotenv"
 dotenv.config()
 
 const sequelize = new Sequelize(
     "memos",
-    process.env.USER!,
+    process.env.USER,
     process.env.PASS,
     {
         host:"localhost",
@@ -16,7 +15,7 @@ const sequelize = new Sequelize(
 )
 
 const authenticate = () => {
-    sequelize.authenticate().then(() => console.log("conexión exitosa")).catch(console.error)
+    sequelize.authenticate().then(async () => {console.log("conexión exitosa")}).catch(console.error)
 }
 
 export {sequelize, authenticate}

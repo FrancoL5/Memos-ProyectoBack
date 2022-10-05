@@ -2,9 +2,10 @@ import express from "express"
 import morgan from "morgan"
 import { router } from "./routes/memos.routes.js";
 import {authenticate} from "./utils/sequelize.js"
+import cors from "cors"
 const app = express()
 
-
+app.use(cors())
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

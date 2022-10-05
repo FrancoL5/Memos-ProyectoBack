@@ -1,19 +1,33 @@
 import User from "../models/User.js"
-const sincModel = async (req, res) => {
-    User.sync({ alter: true }).then(() => {
-        return res.status(200).toJSON("Sincronizad")
-    }).catch(console.error)
+import Message from "../models/Message.js"
 
+const sincModel = async (req, res) => {
+    const { model } = req.body
+
+    switch (model) {
+        case "Message":
+            Message.sync({ alter: true })
+                .then(() => {
+                    return res.status(200).json("Sincronizado")
+                })
+                .catch(console.error)
+            break
+        case "User":
+            User.sync({ alter: true }).then(() => {
+                return res.status(200).json("Sincronizado")
+            }).catch(console.error)
+            break;
+        default:
+            return res.status(400).json("Model not found")
+    }
 }
 const findUsers = async (req, res) => {
     try {
         let result = []
-        const ids = req.query.ids ? JSON.parse(req.query.ids) : null
+        const ids = req.body.ids ? JSON.parse(req.body.ids) : null
         if (ids) {
-            [result] = await Promise.all(
-                ids.map(async (id) => 
-                    await User.findAll({ where: { id } })
-                )
+            ;[result] = await Promise.all(
+                ids.map(async (id) => await User.findAll({ where: { id } }))
             )
         } else {
             result = await User.findAll()
@@ -26,12 +40,11 @@ const findUsers = async (req, res) => {
 }
 
 const createUser = async (req, res) => {
-
-    const { name, lastName, country, city, password, userName } = req.query
+    const { name, last_name, country, city, password, user_name } = req.body
     User.create({
-        user_name: userName,
+        user_name,
         name,
-        last_name: lastName,
+        last_name,
         country,
         city,
         password,
@@ -40,15 +53,15 @@ const createUser = async (req, res) => {
         .catch(console.error)
 }
 const deleteUsers = async (req, res) => {
-
     try {
-        const ids = JSON.parse(req.query.ids)
+        const ids = JSON.parse(req.body.ids)
         const result = await Promise.all(
-            ids.map(async (id) => 
-                await User.destroy({ restartIdentity: true, where: { id } })
+            ids.map(
+                async (id) =>
+                    await User.destroy({ restartIdentity: true, where: { id } })
             )
         )
-        return res.status(200).json(result.reduce((acc, num) => acc+num, 0))
+        return res.status(200).json(result.reduce((acc, num) => acc + num, 0))
     } catch (err) {
         console.log(err)
         return res.status(400).json("algo salio mal")

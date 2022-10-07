@@ -5,11 +5,12 @@ import User from "./User.js"
 const Message = sequelize.define("Message", {
     id:{type:DataTypes.BIGINT, primaryKey:true, autoIncrement:true},
     content: {type: DataTypes.STRING},
-    time: {type: DataTypes.DATE, defaultValue: DataTypes.NOW}
+    time: {type: DataTypes.DATE, defaultValue: DataTypes.NOW},
+    receiver: {type:DataTypes.BIGINT, allowNull:false}
 })
 
 User.hasOne(Message, {
-    foreignKey:"user_id"
+    foreignKey:"user_id",
 })
 Message.belongsTo(User, {
     foreignKey:"user_id"

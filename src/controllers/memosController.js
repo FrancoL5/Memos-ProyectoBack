@@ -1,5 +1,7 @@
 import User from "../models/User.js"
 import Message from "../models/Message.js"
+import validateUser from "./validateUser.js"
+import bcrypt from "bcrypt"
 
 const sincModel = async (req, res) => {
     const { model } = req.body
@@ -21,6 +23,7 @@ const sincModel = async (req, res) => {
             return res.status(400).json("Model not found")
     }
 }
+
 const findUsers = async (req, res) => {
     try {
         let result = []
@@ -32,7 +35,6 @@ const findUsers = async (req, res) => {
         } else {
             result = await User.findAll()
         }
-        console.log(result)
         return res.status(200).json(result)
     } catch (err) {
         console.log(err)
@@ -49,7 +51,7 @@ const createUser = async (req, res) => {
         city,
         password,
     })
-        .then((result) => res.status(200).json(result.toJSON()))
+        .then((result) => res.status(200).json(result.toJSON()["user_name"]))
         .catch(console.error)
 }
 const deleteUsers = async (req, res) => {

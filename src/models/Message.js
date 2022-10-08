@@ -4,9 +4,10 @@ import User from "./User.js"
 
 const Message = sequelize.define("Message", {
     id:{type:DataTypes.BIGINT, primaryKey:true, autoIncrement:true},
-    content: {type: DataTypes.STRING},
+    content: {type: DataTypes.STRING, allowNull:false},
     time: {type: DataTypes.DATE, defaultValue: DataTypes.NOW},
-    receiver: {type:DataTypes.BIGINT, allowNull:false}
+    receiver: {type:DataTypes.BIGINT, allowNull:false},
+    view: {type:DataTypes.BOOLEAN, defaultValue:false}
 })
 
 User.hasOne(Message, {

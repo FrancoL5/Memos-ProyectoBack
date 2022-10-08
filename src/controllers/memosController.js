@@ -52,7 +52,7 @@ const createUser = async (req, res) => {
         password,
     })
         .then((result) => res.status(200).json(result.toJSON()["user_name"]))
-        .catch(console.error)
+        .catch((err) => res.status(400).json(err))
 }
 const deleteUsers = async (req, res) => {
     try {

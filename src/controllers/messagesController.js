@@ -5,9 +5,10 @@ const createMessage = async (req, res) => {
         const { id } = req.params
 
         const messages = JSON.parse(req.body.messages)
+
         const result = await Promise.all(
-            messages.map((content) => {
-                Message.create({ ...content, user_id: id })
+            messages.map(async (content) => {
+                await Message.create({ ...content, user_id: id })
             })
         )
         return res.status(200).json(`Mensajes enviados:${result.length}`)
@@ -23,13 +24,13 @@ const getMessages = async (req, res) => {
         switch (flow) {
             case "sent":
                 result = await Message.findAll({
-                    attributes: ["content", "receiver", "time", "user_id"],
+                    attributes: ["content", "receiver","receiver_id", "time", "user_id"],
                     where: { user_id: id },
                 })
                 break
             case "inbox":
                 result = await Message.findAll({
-                    attributes: ["content", "receiver", "time", "user_id"],
+                    attributes: ["content", "receiver","receiver_id", "time", "user_id"],
                     where: { receiver: id },
                 })
                 break

@@ -1,7 +1,5 @@
 import User from "../models/User.js"
 import Message from "../models/Message.js"
-import validateUser from "./validateUser.js"
-import bcrypt from "bcrypt"
 
 const sincModel = async (req, res) => {
     const { model } = req.body
@@ -15,10 +13,12 @@ const sincModel = async (req, res) => {
                 .catch(console.error)
             break
         case "User":
-            User.sync({ alter: true }).then(() => {
-                return res.status(200).json("Sincronizado")
-            }).catch(console.error)
-            break;
+            User.sync({ alter: true })
+                .then(() => {
+                    return res.status(200).json("Sincronizado")
+                })
+                .catch(console.error)
+            break
         default:
             return res.status(400).json("Model not found")
     }
@@ -27,17 +27,32 @@ const sincModel = async (req, res) => {
 const findUsers = async (req, res) => {
     try {
         let result = []
-        const ids = req.body.ids ? JSON.parse(req.body.ids) : null
-        if (ids) {
-            ;[result] = await Promise.all(
-                ids.map(async (id) => await User.findAll({ where: { id } }))
-            )
-        } else {
+        const { userName } = req.params
+        console.log(userName);
+        if (userName !== "ALL") {
+            result = await User.findAll({ where: { user_name: userName } })
+        } else if (userName === "ALL") {
             result = await User.findAll()
         }
         return res.status(200).json(result)
     } catch (err) {
         console.log(err)
+    }
+}
+
+const getID = async (req, res) => {
+    try {
+        const { userName } = req.params
+        const {dataValues: result} = await User.findOne({
+            attributes: ["user_id"],
+            where: { user_name: userName },
+        })
+        console.log(result)
+
+        return res.status(200).json(result.user_id)
+    } catch (err) {
+        console.log(err)
+        return res.status(400).json(null)
     }
 }
 
@@ -51,7 +66,7 @@ const createUser = async (req, res) => {
         city,
         password,
     })
-        .then((result) => res.status(200).json(result.toJSON()["user_name"]))
+        .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err))
 }
 const deleteUsers = async (req, res) => {
@@ -69,4 +84,4 @@ const deleteUsers = async (req, res) => {
         return res.status(400).json("algo salio mal")
     }
 }
-export { findUsers, createUser, deleteUsers, sincModel }
+export { findUsers, createUser, deleteUsers, sincModel, getID }

@@ -20,9 +20,11 @@ Message.belongsTo(User, {
 
 User.hasOne(Message, {
     foreignKey:"user_name",
+    sourceKey:"user_name"
 })
-Message.belongsTo(User, {
-    foreignKey:"user_name"
-})
+// Message.belongsTo(User, {
+//     foreignKey:"user_name",
+//     sourceKey:"user_name"
+// })
 
 export default Message

@@ -5,8 +5,8 @@ import routerMessage from "./message.routes.js";
 const router = express.Router();
 
 
-router.post("/api/users/:id", validateUser)
 router.use("/api/users", routerMessage)
+router.post("/api/users/:id", validateUser)
 router.use(routerUser)
 
 

@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, deleteUsers, findUsers, getID, sincModel } from "../controllers/memosController.js";
+import { createUser, deleteUsers, findUsers, getID, sincModel } from "../controllers/userController.js";
 const routerUser = express.Router();
 
 

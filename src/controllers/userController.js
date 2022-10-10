@@ -30,9 +30,9 @@ const findUsers = async (req, res) => {
         const { userName } = req.params
         console.log(userName);
         if (userName !== "ALL") {
-            result = await User.findAll({ where: { user_name: userName } })
+            result = await User.findAll({attributes:["user_name"] ,where: { user_name: userName } })
         } else if (userName === "ALL") {
-            result = await User.findAll()
+            result = await User.findAll({attributes:["user_name"]})
         }
         return res.status(200).json(result)
     } catch (err) {
